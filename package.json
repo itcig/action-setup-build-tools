@@ -1,0 +1,30 @@
+{
+	"name": "@itcig/action-setup-build-tools",
+	"version": "1.1.0",
+	"license": "MIT",
+	"description": "Github action to set build tools in workflows for things like PHP, Node, Composer, etc...",
+	"author": {
+		"name": "ITCIG",
+		"email": "it@capinfogroup.com"
+	},
+	"homepage": "https://github.com/itcig/action-wait-for-k8s#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/itcig/action-setup-build-tools.git"
+	},
+	"bugs": {
+		"url": "https://github.com/itcig/itcig/issues"
+	},
+	"keywords": [
+		"actions",
+		"workflows",
+		"runtime",
+		"build",
+		"tools",
+		"setup"
+	],
+	"extra": {
+		"autotagger": true,
+		"mirror-repo": "itcig/action-setup-build-tools"
+	}
+}
