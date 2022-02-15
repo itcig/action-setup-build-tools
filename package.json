@@ -7,7 +7,7 @@
 		"name": "ITCIG",
 		"email": "it@capinfogroup.com"
 	},
-	"homepage": "https://github.com/itcig/action-wait-for-k8s#readme",
+	"homepage": "https://github.com/itcig/action-setup-build-tools#readme",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/itcig/action-setup-build-tools.git"
