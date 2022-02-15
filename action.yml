@@ -3,8 +3,13 @@ description: "Setup needed versions of PHP, Node, and Yarn."
 inputs:
   php:
     description: "Override the PHP version, or set 'false' to skip setting up PHP."
+    required: false
   node:
     description: "Override the Node version, or set 'false' to skip setting up Node and Yarn."
+    required: false
+  github_token:
+    description: "The GitHub PAT that Composer will use to authenticate with private repositories"
+    required: false
 runs:
   using: composite
   steps:
@@ -17,16 +22,6 @@ runs:
       run: |
         . .github/versions.sh
 
-        # GH doesn't support "if" here. ☹️
-        if [[ "$INPUT_PHP" == "false" ]]; then
-          echo 'Cannot support `php: false`, GitHub does not support conditionals in composite actions yet. ☹️'
-          INPUT_PHP=
-        fi
-        if [[ "$INPUT_NODE" == "false" ]]; then
-          echo 'Cannot support `node: false`, GitHub does not support conditionals in composite actions yet. ☹️'
-          INPUT_NODE=
-        fi
-
         printf "\n\e[1mSelected tool versions\e[0m\n"
         echo " PHP: ${INPUT_PHP:-$PHP_VERSION}"
         echo "::set-output name=php-version::${INPUT_PHP:-$PHP_VERSION}"
@@ -35,38 +30,64 @@ runs:
         echo " Node: ${INPUT_NODE:-$NODE_VERSION}"
         echo "::set-output name=node-version::${INPUT_NODE:-$NODE_VERSION}"
 
+    # Output step heading
     - run: printf "\n\e[1mSetup PHP\e[0m\n"
       shell: bash
-      #if: steps.versions.outputs.php-version != 'false'
+      if: steps.versions.outputs.php-version != 'false'
+
+    # Setup the version of PHP passed as an input (or the default in versions.sh)
     - name: Setup PHP
-      #if: steps.versions.outputs.php-version != 'false'
+      if: steps.versions.outputs.php-version != 'false'
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ steps.versions.outputs.php-version }}
         tools: composer:${{ steps.versions.outputs.composer-version }}
         extensions: mysql, imagick
         coverage: none
+      env:
+        COMPOSER_TOKEN: ${{ inputs.github_token }}
 
+    # Notify user we are skipping PHP install if version passed is 'false'
+    - run: printf "\n\e[1mSkipping PHP setup\e[0m\n\n"
+      shell: bash
+      if: steps.versions.outputs.php-version == 'false'
+
+    # Output step heading
     - run: printf "\n\e[1mSetup Node\e[0m\n"
       shell: bash
-      #if: steps.versions.outputs.node-version != 'false'
+      if: steps.versions.outputs.node-version != 'false'
+
+    # Setup the version of Node passed as an input (or the default in versions.sh)
     - name: Setup Node
-      #if: steps.versions.outputs.node-version != 'false'
+      if: steps.versions.outputs.node-version != 'false'
       uses: actions/setup-node@v2
       with:
         node-version: ${{ steps.versions.outputs.node-version }}
+        always-auth: true
+        registry-url: https://npm.pkg.github.com
+        scope: '@itcig'
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.github_token }}
 
+    # Notify user we are skipping Node install if version passed is 'false'
+    - run: printf "\n\e[1mSkipping Node setup\e[0m\n\n"
+      shell: bash
+      if: steps.versions.outputs.node-version == 'false'
+
+    # Output step heading
     - run: printf "\n\e[1mSetup Composer cache\e[0m\n"
       shell: bash
-      #if: steps.versions.outputs.php-version != 'false'
+      if: steps.versions.outputs.php-version != 'false'
+
     - name: Get Composer cache directory
-      #if: steps.versions.outputs.php-version != 'false'
+      if: steps.versions.outputs.php-version != 'false'
       id: composer-cache
       shell: bash
       run: |
         echo "::set-output name=dir::$(composer config cache-files-dir)"
+
     - name: Use composer cache
-      #if: steps.versions.outputs.php-version != 'false'
+      if: steps.versions.outputs.php-version != 'false'
       uses: actions/cache@v2
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
@@ -74,6 +95,7 @@ runs:
         restore-keys: |
           ${{ runner.os }}-composer-
 
+    # Output tool versions after setup is finished
     - name: Tool versions
       shell: bash
       run: |
