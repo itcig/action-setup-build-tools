@@ -1,5 +1,5 @@
-name: "Setup tools"
-description: "Setup needed versions of PHP, Node, and Yarn."
+name: 'Setup tools'
+description: 'Setup needed versions of PHP, Node, and Yarn.'
 inputs:
   php:
     description: "Override the PHP version, or set 'false' to skip setting up PHP."
@@ -8,12 +8,12 @@ inputs:
     description: "Override the Node version, or set 'false' to skip setting up Node and Yarn."
     required: false
   github_token:
-    description: "The GitHub PAT that Composer will use to authenticate with private repositories"
+    description: 'The GitHub PAT that Composer will use to authenticate with private repositories'
     required: false
 runs:
   using: composite
   steps:
-    - name: "Read tool versions"
+    - name: 'Read tool versions'
       id: versions
       shell: bash
       env:
