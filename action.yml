@@ -95,6 +95,18 @@ runs:
         restore-keys: |
           ${{ runner.os }}-composer-
 
+    # Set Git permissions
+    - run: printf "\n\e[1mSet Git permissions\e[0m\n"
+      shell: bash
+
+    - name: 'Permission Git' # Interesting step
+      env:
+        GH_TOKEN: ${{ inputs.github_token }}
+      shell: bash
+      run: |
+        git config user.name "cig-bot"
+        git config user.email "cig-bot@users.noreply.github.com"
+
     # Output tool versions after setup is finished
     - name: Tool versions
       shell: bash
