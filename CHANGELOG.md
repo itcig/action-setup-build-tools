@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.0](https://github.com/itcig/itcig/compare/@itcig/action-setup-build-tools@1.3.2...@itcig/action-setup-build-tools@1.4.0) (2024-01-16)
+
+
+### Features
+
+* update action syntax and dependencies ([#40](https://github.com/itcig/itcig/issues/40)) ([344b786](https://github.com/itcig/itcig/commit/344b78664e9298597bb128b62acb9d2b06376f5b))
+
+
+
 ### 1.3.2 (2022-03-08)
 
 **Note:** Version bump only for package @itcig/action-setup-build-tools

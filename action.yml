@@ -24,11 +24,11 @@ runs:
 
         printf "\n\e[1mSelected tool versions\e[0m\n"
         echo " PHP: ${INPUT_PHP:-$PHP_VERSION}"
-        echo "::set-output name=php-version::${INPUT_PHP:-$PHP_VERSION}"
+        echo "php-version=${INPUT_PHP:-$PHP_VERSION}" >> $GITHUB_OUTPUT
         echo " Composer: $COMPOSER_VERSION"
-        echo "::set-output name=composer-version::$COMPOSER_VERSION"
+        echo "composer-version=$COMPOSER_VERSION" >> $GITHUB_OUTPUT
         echo " Node: ${INPUT_NODE:-$NODE_VERSION}"
-        echo "::set-output name=node-version::${INPUT_NODE:-$NODE_VERSION}"
+        echo "node-version=${INPUT_NODE:-$NODE_VERSION}" >> $GITHUB_OUTPUT
 
     # Output step heading
     - run: printf "\n\e[1mSetup PHP\e[0m\n"
@@ -60,7 +60,7 @@ runs:
     # Setup the version of Node passed as an input (or the default in versions.sh)
     - name: Setup Node
       if: steps.versions.outputs.node-version != 'false'
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ steps.versions.outputs.node-version }}
         always-auth: true
@@ -84,11 +84,11 @@ runs:
       id: composer-cache
       shell: bash
       run: |
-        echo "::set-output name=dir::$(composer config cache-files-dir)"
+        echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
     - name: Use composer cache
       if: steps.versions.outputs.php-version != 'false'
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
         key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}

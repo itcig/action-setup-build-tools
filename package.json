@@ -1,6 +1,6 @@
 {
 	"name": "@itcig/action-setup-build-tools",
-	"version": "1.3.2",
+	"version": "1.4.0",
 	"license": "MIT",
 	"description": "Github action to set build tools in workflows for things like PHP, Node, Composer, etc...",
 	"author": {
